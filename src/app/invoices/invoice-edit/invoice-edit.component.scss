@@ -1,0 +1,44 @@
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}
+
+.form-header {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	align-items: center;
+	border-radius: 10px;
+	background-color: #555;
+	color: white;
+	padding: 10px 20px 10px 20px;
+}
+
+.form-header label {
+	white-space: nowrap;
+	font-weight: bold;
+}
+
+.form-line-items input.item-description {
+	width: 100%;
+}
+.form-line-items input.item-quantity {
+	width: 80px;
+}
+
+.form-line-items input.item-price, 
+.form-line-items input.item-total {
+	width: 60px;
+}
+
+legend {
+	border-radius: 5px;
+	background-color: #ddd;
+	padding: 2px 10px 3px 10px;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+label {
+	font-weight: bold;
+}

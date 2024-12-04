@@ -1,0 +1,21 @@
+<div class="d-flex flex-column min-vh-100">
+	<!-- Header Component -->
+	<header>
+	  <app-header></app-header>
+	</header>
+ 
+	<!-- Main Content Area -->
+	<main class="flex-fill">
+	  <div class="container app-content-container">
+		 <router-outlet></router-outlet>
+	  </div>
+	</main>
+ 
+	<!-- Footer Component -->
+	<footer class="bg-dark mt-auto">
+	  <div class="container app-content-container text-center py-3 text-white">
+		 <app-footer></app-footer>
+	  </div>
+	</footer>
+ </div>
+ 
