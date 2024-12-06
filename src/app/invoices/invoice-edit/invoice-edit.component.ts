@@ -51,6 +51,9 @@ export class InvoiceEditComponent implements OnInit {
 			if (this.isEditMode) {
 				this.loadInvoiceData(this.invoiceId);
 			}
+			else {
+				this.addItem();
+			}
 		});
 	}
 
