@@ -121,8 +121,8 @@ export class PdfGeneratorService {
 			if (showItemQuantity) {
 				this.pdfDoc.text(item.quantity.toString(), qtyCol, yPosition, { align: 'center' });
 			}
-			this.pdfDoc.text(item.price.toFixed(2), priceCol, yPosition, { align: 'right' });
-			this.pdfDoc.text((item.lineTotal).toFixed(2), totalCol, yPosition, { align: 'right' });
+			this.pdfDoc.text(this.locSvc.formatCurrency(item.price), priceCol, yPosition, { align: 'right' });
+			this.pdfDoc.text(this.locSvc.formatCurrency(item.lineTotal), totalCol, yPosition, { align: 'right' });
 			yPosition += lineHeight;
 		});
 
@@ -138,10 +138,13 @@ export class PdfGeneratorService {
 				rightColAlignRight, yPosition, { align: 'right' });
 		}
 
+		// If shippingFee is 0, don't show it
+		if(invoice.shippingFee > 0) {
 		this.pdfDoc.text(`Shipping Fee:`, rightCol, yPosition += (1.25 * lineHeight));
 		this.pdfDoc.text(`${this.locSvc.formatCurrency(invoice.shippingFee)}`,
 			rightColAlignRight, yPosition, { align: 'right' });
-
+		}
+		
 		this.pdfDoc.text(`Tax (${invoice.taxRate}%):`, rightCol, yPosition += (1.25 * lineHeight));
 		this.pdfDoc.text(`${this.locSvc.formatCurrency(invoice.invoiceTaxTotal)}`,
 			rightColAlignRight, yPosition, { align: 'right' });

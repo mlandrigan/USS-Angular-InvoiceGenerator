@@ -31,10 +31,10 @@
 					</div>
 					<div class="col-md-3">
 						<label for="invoiceDate">Invoice Date</label>
-						<input formControlName="invoiceDate" id="invoiceDate" type="text" class="form-control" />
+						<input type="date" formControlName="invoiceDate" id="invoiceDate" class="form-control"/>
 					</div>
 					<div class="col-md-3">
-						<label for="dueDate">Invoice Date</label>
+						<label for="dueDate">Due Date</label>
 						<input formControlName="dueDate" id="dueDate" type="date" class="form-control" />
 					</div>
 				</div>
@@ -43,7 +43,7 @@
 		</div>
 		<!-- Seller Info -->
 		<div class="card mb-3">
-			<div class="card-header">
+			<div class="card-header"> 
 				<h4 class="card-title mb-0">Your Business Information</h4>
 			</div>
 			<fieldset formGroupName="sellerInfo">
@@ -206,14 +206,14 @@
 								<div class="input-group">
 									<span class="input-group-text">{{ localCurrencySymbol }}</span>
 										<input formControlName="price" id="itemPrice-{{ i }}" type="text" 
-											class="form-control item-price text-end float-end" (change)="calculateTotals()" />
+											class="form-control currency item-price text-end float-end" (change)="calculateTotals()" />
 									</div>	
 							</td>
 							<td>
 								<div class="input-group">
 									<span class="input-group-text">{{ localCurrencySymbol }}</span>
 								<input formControlName="lineTotal" id="itemLineTotal-{{ i }}" type="text" readonly
-									class="form-control item-total text-end float-end"/>
+									class="form-control currency item-total text-end float-end"/>
 									</div>
 							</td>
 							<td class="line-actions text-center">
@@ -268,7 +268,7 @@
 								<div class="input-group">
 									<span class="input-group-text">{{ localCurrencySymbol }}</span>
 									<input formControlName="invoiceSubTotal" id="invoiceSubTotal" type="text" 
-										class="form-control text-end" readonly />
+										class="form-control text-end currency" readonly />
 								</div>
 
 							</div>
@@ -282,7 +282,21 @@
 								<div class="input-group">
 									<span class="input-group-text">{{ localCurrencySymbol }}</span>
 									<input formControlName="discount" id="discount" type="text" 
-										class="form-control text-end" (change)="calculateTotals()" />
+										class="form-control text-end currency" (change)="calculateTotals()" />
+								</div>
+
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<label for="shippingFee" class="offset-md-5 col-md-3 col-form-label text-md-end">
+								Shipping Fee:
+							</label>
+							<div class="col-md-4">
+								<div class="input-group">
+									<span class="input-group-text">{{ localCurrencySymbol }}</span>
+									<input formControlName="shippingFee" id="shippingFee" type="text" 
+										class="form-control text-end currency" (change)="calculateTotals()" />
 								</div>
 
 							</div>
@@ -303,7 +317,7 @@
 								<div class="input-group">
 									<span class="input-group-text">{{ localCurrencySymbol }}</span>
 									<input formControlName="invoiceTaxTotal" id="invoiceTaxTotal" type="text" 
-										class="form-control text-end" readonly />
+										class="form-control currency text-end" readonly />
 								</div>
 							</div>
 						</div>
@@ -316,7 +330,7 @@
 								<div class="input-group">
 									<span class="input-group-text">{{ localCurrencySymbol }}</span>
 									<input formControlName="invoiceTotal" id="invoiceTotal" type="text" 
-										class="form-control text-end" readonly />
+										class="form-control currency text-end" readonly />
 								</div>
 
 							</div>

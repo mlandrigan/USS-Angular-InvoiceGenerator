@@ -7,12 +7,18 @@ import { InvoicesService } from '../../services/invoices.service';
 import { NgFor, NgForOf, NgIf } from '@angular/common';
 import { LocalizationService } from '../../services/localization.service';
 import { PdfGeneratorService } from '../../services/pdf-generator.service';
+import { CustomDateDirective } from '../../shared/custom-date.directive';
+import { CustomCurrencyDirective } from '../../shared/custom-currency.directive';
 
 
 @Component({
 	selector: 'app-invoice-edit',
 	standalone: true,
-	imports: [ ReactiveFormsModule, NgIf, NgFor, NgForOf ],
+	imports: [ 
+		ReactiveFormsModule, 
+		CustomDateDirective,
+		CustomCurrencyDirective,
+		NgIf, NgFor, NgForOf ],
 	templateUrl: './invoice-edit.component.html',
 	styleUrl: './invoice-edit.component.scss'
 })
@@ -54,7 +60,7 @@ export class InvoiceEditComponent implements OnInit {
 			type: [null, Validators.required],
 			invoiceNumber: [''],
 			poNumber: [''],
-			invoiceDate: [null, Validators.required],
+			invoiceDate: [new Date(), Validators.required],
 			dueDate: [new Date(), Validators.required],
 			sellerInfo: this.fb.group({
 				id: [null, Validators.required],
@@ -90,8 +96,9 @@ export class InvoiceEditComponent implements OnInit {
 			items: this.fb.array([]),
 			invoiceSubTotal: [{ value: 0, disabled: true }],
 			discount: [0],
+			shippingFee: [0],
 			taxRate: [0, [Validators.required, Validators.min(0)]],
-			invoiceTaxTotal: [{ value: 0, disabled: true }],
+			invoiceTaxTotal: [{ value: 0, readonly: true }],
 			invoiceTotal: [{ value: 0, disabled: true }],
 			notes: [''],
 		});
@@ -131,29 +138,32 @@ export class InvoiceEditComponent implements OnInit {
 
 	removeItem(index: number): void {
 		this.items.removeAt(index);
+		this.calculateTotals();
 	}
 
 	calculateTotals(): void {
 		let items = this.items.value as LineItem[];
+		let discount = this.invoiceForm.value.discount;
 		let subTotal:number = 0;
+		let taxTotal:number = 0;
+		let discountedSubTotal:number = 0;
 
 		items.forEach((item) => {
 			const lineTotal = item.price * item.quantity;
 			subTotal += lineTotal;
 			this.items.at(items.indexOf(item)).patchValue({
-				price: this.localizationService.formatCurrency(item.price, false),
-				lineTotal: this.localizationService.formatCurrency(lineTotal, false), });
+				price: item.price,
+				lineTotal: lineTotal });
 		});
 
-		const taxTotal = ((subTotal - this.invoiceForm.value.discount) * this.invoiceForm.value.taxRate) / 100;
-		const total = subTotal + taxTotal;
+		discountedSubTotal = subTotal - discount;
+		taxTotal = (discountedSubTotal * this.invoiceForm.value.taxRate) / 100;
+		const total = discountedSubTotal + taxTotal;
 
 		this.invoiceForm.patchValue({
-			invoiceSubTotal: this.localizationService.formatCurrency(subTotal, false),
-			discount: this.localizationService.formatCurrency(this.invoiceForm.value.discount, false),
-			taxRate: this.localizationService.formatNumber(this.invoiceForm.value.taxRate, 2),
-			invoiceTaxTotal: this.localizationService.formatCurrency(taxTotal, false),
-			invoiceTotal: this.localizationService.formatCurrency(total, false),
+			invoiceSubTotal: subTotal,
+			invoiceTaxTotal: taxTotal,
+			invoiceTotal: total,
 		});
 	}
 
@@ -193,7 +203,7 @@ export class InvoiceEditComponent implements OnInit {
 		}
 
 		if (this.invoiceForm.valid) {
-			const invoice = this.invoiceForm.getRawValue();
+			const invoice: Invoice = this.invoiceForm.getRawValue();
 			if(this.isEditMode) {
 				this.invoicesService.updateInvoice(invoice);
 			} else {
@@ -212,7 +222,7 @@ export class InvoiceEditComponent implements OnInit {
 	}
 
 	createPdf(): void {
-		let invoice: Invoice = this.invoiceForm.value;
+		let invoice: Invoice = this.invoiceForm.getRawValue();
 		this.pdfGenerator.generateInvoicePdf(invoice);
 	}
 }
